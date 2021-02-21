@@ -1,6 +1,8 @@
 # saunadge-rs
 
-saunadge lets you to generate sakatsu(サ活/サウナ活動) badge. saunadge server aggregates from the data over [SAUNA-IKITAI](https://sauna-ikitai.com/).
+[![Build image](https://github.com/po3rin/saunadge-rs/actions/workflows/image.yml/badge.svg)](https://github.com/po3rin/saunadge-rs/actions/workflows/image.yml)
+
+saunadge-rs api lets you to generate sakatsu(サ活/サウナ活動) badge. saunadge server aggregates from the data over [SAUNA-IKITAI](https://sauna-ikitai.com/).
 
 ## Example
 
