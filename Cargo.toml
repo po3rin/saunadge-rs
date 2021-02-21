@@ -3,6 +3,12 @@ name = "saunadge-rs"
 version = "0.1.0"
 authors = ["hiromu.nakamura <abctail30@gmail.com>"]
 edition = "2018"
+license = "Apache-2.0"
+description = "saunadge-rs API lets you to generate sakatsu(サ活/サウナ活動) badge. saunadge server aggregates from the data over [SAUNA-IKITAI](https://sauna-ikitai.com/)."
+documentation = "https://github.com/po3rin/saunadge-rs/blob/master/README.md"
+repository = "https://github.com/po3rin/saunadge-rs"
+homepage = "https://github.com/po3rin/saunadge-rs"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
