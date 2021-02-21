@@ -93,8 +93,9 @@ async fn badge(web::Path(id): web::Path<String>) -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("start");
     HttpServer::new(|| App::new().service(badge))
-        .bind("127.0.0.1:8080")?
+        .bind("0.0.0.0:8080")?
         .run()
         .await
 }
