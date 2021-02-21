@@ -11,13 +11,3 @@ FROM gcr.io/distroless/cc-debian10
 COPY --from=build /usr/local/cargo/bin/saunadge-rs /usr/local/bin/saunadge-rs
 
 CMD ["saunadge-rs"]
-
-# FROM rust:1.48.0
-
-# WORKDIR /saunadge-rs
-
-# COPY . .
-# RUN cargo build --release
-
-# EXPOSE 8080
-# ENTRYPOINT ["/saunadge-rs/target/release/saunadge-rs"]
