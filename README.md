@@ -14,3 +14,10 @@ You can decide the badge style with `style` option.
   
 [![sakatsu badge](https://img.shields.io/endpoint.svg?url=https://saunadge-gjqqouyuca-an.a.run.app/api/v1/badge/46531&style=flat)](https://sauna-ikitai.com/saunners/46531)
 
+## sunadge CLI
+
+saunadge CLI is here !!
+https://github.com/po3rin/saunadge
+
+saunadge CLI generates sakatsu badge with Markdown format..
+
