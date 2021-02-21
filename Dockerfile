@@ -1,24 +1,13 @@
-FROM debian:buster-slim as runner
+FROM rust:1.48.0 as build
+ENV PKG_CONFIG_ALLOW_CROSS=1
 
-RUN apt update; apt install -y libssl1.1
+WORKDIR /usr/src/saunadge-rs
+COPY . .
 
-FROM rust:1.48.0 as builder
+RUN cargo install --path .
 
-WORKDIR /usr/src
+FROM gcr.io/distroless/cc-debian10
 
-RUN rustup target add x86_64-unknown-linux-musl
+COPY --from=build /usr/local/cargo/bin/saunadge-rs /usr/local/bin/saunadge-rs
 
-COPY Cargo.toml Cargo.lock ./
-COPY src ./src
-
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/usr/src/target \
-    cargo install --path .
-
-FROM runner
-
-COPY --from=builder /usr/local/cargo/bin/saunadge-rs .
-
-USER 1000
-
-CMD ["./saunadge-rs"]
+CMD ["saunadge-rs"]

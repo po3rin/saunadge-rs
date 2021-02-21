@@ -1,10 +1,9 @@
-use actix_web::{get, web, App, HttpServer, HttpResponse};
-use scraper::{Selector, Html};
+use actix_web::{get, web, App, HttpResponse, HttpServer};
 use reqwest;
-use std::error::Error;
+use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
+use std::error::Error;
 use std::fmt;
-
 
 #[derive(Serialize, Deserialize)]
 #[allow(non_snake_case)]
@@ -15,9 +14,8 @@ struct Res {
     message: String,
     color: String,
     cacheSeconds: u16,
-    logoSvg: String
+    logoSvg: String,
 }
-
 
 #[derive(Debug)]
 struct SaunadgeError(String);
@@ -30,32 +28,44 @@ impl fmt::Display for SaunadgeError {
 
 impl Error for SaunadgeError {}
 
-fn get_sakatsu(id : &str) -> Result<String, Box<dyn Error>> {
-    let selector = Selector::parse(".p-localNav_count").unwrap();
+fn get_sakatsu(id: &str) -> Result<String, Box<dyn Error>> {
+    let selector = match Selector::parse(".p-localNav_count") {
+        Ok(s) => s,
+        Err(_) => return Err(Box::new(SaunadgeError("selector parse error".into()))),
+    };
 
+    // get html from sauna-ikitai
     let url = format!("https://sauna-ikitai.com/saunners/{}", id);
     let res = reqwest::blocking::get(&url)?;
     let status = res.status();
-    if status != reqwest::StatusCode::OK{
-        return Err(Box::new(SaunadgeError("failed to get sakatsu by id".into())));
+    if status != reqwest::StatusCode::OK {
+        return Err(Box::new(SaunadgeError(
+            "failed to get sakatsu by id".into(),
+        )));
     };
 
+    // get counts.
     let body = res.text()?;
-
     let document = Html::parse_document(&body);
-    let element = document.select(&selector).next().unwrap();
+    let element = document
+        .select(&selector)
+        .next()
+        .ok_or(SaunadgeError("sakatsu not found".into()))?;
     let counts = element.text().collect::<Vec<_>>();
-    let sakatsu = counts.first().unwrap();
+
+    // get sakatsu.
+    let sakatsu = counts
+        .first()
+        .ok_or(SaunadgeError("sakatsu not found".into()))?;
     Ok(sakatsu.to_string())
 }
 
-
 #[get("/api/v1/badge/{id}")]
 async fn badge(web::Path(id): web::Path<String>) -> HttpResponse {
-    let sakatsu = match get_sakatsu(&id){
+    let sakatsu = match get_sakatsu(&id) {
         Ok(s) => s,
         Err(e) => {
-            println!("{}",e );
+            println!("{}", e);
             return HttpResponse::InternalServerError()
                 .json(Res {
                     isError: true,
@@ -69,7 +79,7 @@ async fn badge(web::Path(id): web::Path<String>) -> HttpResponse {
         }
     };
 
-   HttpResponse::Ok()
+    HttpResponse::Ok()
     .json(Res {
         isError: false,
         schemaVersion: 1,
